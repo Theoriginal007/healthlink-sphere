@@ -13,7 +13,6 @@ import HealthTracking from "./pages/HealthTracking";
 import Education from "./pages/Education";
 import About from "./pages/About";
 import VirtualConsultation from "./pages/VirtualConsultation";
-import Impact from "./pages/Impact";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +31,6 @@ const App = () => (
           <Route path="/education" element={<Education />} />
           <Route path="/about" element={<About />} />
           <Route path="/virtual-consultation" element={<VirtualConsultation />} />
-          <Route path="/impact" element={<Impact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

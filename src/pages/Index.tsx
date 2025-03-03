@@ -167,7 +167,7 @@ const Index = () => {
               
               <div className="mt-8">
                 <AnimatedButton size="lg">
-                  Learn More About Our Impact
+                  Learn More About Our Services
                 </AnimatedButton>
               </div>
             </div>

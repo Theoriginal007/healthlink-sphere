@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { images } from "@/assets/images";
 import { Link, useLocation } from "react-router-dom";
@@ -28,7 +27,6 @@ const Navbar = () => {
     { label: "Education", path: "/education" },
     { label: "Virtual Consultation", path: "/virtual-consultation" },
     { label: "About", path: "/about" },
-    { label: "Impact", path: "/impact" },
   ];
   
   // Check if a link is active

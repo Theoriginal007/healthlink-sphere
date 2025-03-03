@@ -6,6 +6,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import SymptomAnalysis from "./pages/SymptomAnalysis";
+import HealthTracking from "./pages/HealthTracking";
+import Education from "./pages/Education";
+import About from "./pages/About";
+import VirtualConsultation from "./pages/VirtualConsultation";
+import Impact from "./pages/Impact";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +25,14 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/symptom-analysis" element={<SymptomAnalysis />} />
+          <Route path="/health-tracking" element={<HealthTracking />} />
+          <Route path="/education" element={<Education />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/virtual-consultation" element={<VirtualConsultation />} />
+          <Route path="/impact" element={<Impact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

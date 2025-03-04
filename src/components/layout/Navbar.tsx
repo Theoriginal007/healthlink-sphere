@@ -165,8 +165,9 @@ const Navbar = () => {
               </DropdownMenu>
             )}
             <button
-              className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+              className="rounded-full p-2 text-gray-600 hover:bg-gray-100 bg-white/90 backdrop-blur-md shadow-sm ml-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -180,7 +181,7 @@ const Navbar = () => {
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 overflow-y-auto max-h-[calc(100vh-72px)]">
           {/* Mobile Navigation Links */}
           <div className="flex flex-col space-y-2">
             {navLinks.map((link) => (

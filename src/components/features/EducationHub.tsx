@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Book, ChevronRight, Tag } from "lucide-react";
-import { images } from "@/assets/images";
+import { Link } from "react-router-dom";
 
 const EducationHub = () => {
   // Mock education data
@@ -69,10 +69,10 @@ const EducationHub = () => {
                 
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-xs text-gray-500">{article.readTime}</span>
-                  <button className="text-health-primary flex items-center text-sm font-medium hover:underline">
+                  <Link to={`/articles`} className="text-health-primary flex items-center text-sm font-medium hover:underline">
                     Read Article
                     <ChevronRight size={16} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -81,10 +81,10 @@ const EducationHub = () => {
       </div>
       
       <div className="mt-6 text-center">
-        <button className="text-health-primary font-medium flex items-center mx-auto hover:underline">
+        <Link to="/articles" className="text-health-primary font-medium flex items-center mx-auto hover:underline">
           View All Articles
           <ChevronRight size={16} className="ml-1" />
-        </button>
+        </Link>
       </div>
     </div>
   );

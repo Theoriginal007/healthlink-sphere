@@ -13,6 +13,8 @@ import HealthTracking from "./pages/HealthTracking";
 import Education from "./pages/Education";
 import About from "./pages/About";
 import VirtualConsultation from "./pages/VirtualConsultation";
+import Dashboard from "./pages/Dashboard";
+import UserProfile from "./pages/UserProfile";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
           <Route path="/education" element={<Education />} />
           <Route path="/about" element={<About />} />
           <Route path="/virtual-consultation" element={<VirtualConsultation />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<UserProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

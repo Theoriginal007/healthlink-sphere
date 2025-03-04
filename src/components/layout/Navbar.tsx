@@ -1,12 +1,16 @@
+
 import React, { useState, useEffect } from "react";
 import { images } from "@/assets/images";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LogIn, UserPlus } from "lucide-react";
+import { Menu, X, LogIn, UserPlus, User, Layout } from "lucide-react";
 import AnimatedButton from "../ui/AnimatedButton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // In a real app, this would come from auth state
   const location = useLocation();
   
   // Update scroll state
@@ -70,35 +74,103 @@ const Navbar = () => {
             ))}
           </div>
           
-          {/* CTA Buttons */}
+          {/* CTA Buttons or User Menu */}
           <div className="hidden md:flex items-center gap-3">
-            <AnimatedButton
-              variant="outline"
-              size="sm"
-              icon={<LogIn size={16} className="mr-1" />}
-              iconPosition="left"
-              className="border-gray-300 text-gray-700 hover:border-health-primary hover:text-health-primary"
-              onClick={() => window.location.href = "/sign-in"}
-            >
-              Sign In
-            </AnimatedButton>
-            <AnimatedButton
-              size="sm"
-              icon={<UserPlus size={16} className="mr-1" />}
-              iconPosition="left"
-              onClick={() => window.location.href = "/sign-up"}
-            >
-              Sign Up
-            </AnimatedButton>
+            {isLoggedIn ? (
+              <div className="flex items-center gap-3">
+                <Link to="/dashboard" className="flex items-center gap-2 text-gray-600 hover:text-health-primary font-medium transition-colors px-3 py-1 rounded-lg hover:bg-gray-50">
+                  <Layout size={16} />
+                  Dashboard
+                </Link>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="outline-none">
+                    <Avatar className="h-9 w-9 border-2 border-white hover:border-health-muted transition-colors cursor-pointer">
+                      <AvatarImage src={images.avatar1} alt="User" />
+                      <AvatarFallback className="bg-health-primary text-white">JD</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => window.location.href = "/profile"}>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = "/dashboard"}>
+                      <Layout className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
+                      <LogIn className="mr-2 h-4 w-4" />
+                      <span>Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <>
+                <AnimatedButton
+                  variant="outline"
+                  size="sm"
+                  icon={<LogIn size={16} className="mr-1" />}
+                  iconPosition="left"
+                  className="border-gray-300 text-gray-700 hover:border-health-primary hover:text-health-primary"
+                  onClick={() => window.location.href = "/sign-in"}
+                >
+                  Sign In
+                </AnimatedButton>
+                <AnimatedButton
+                  size="sm"
+                  icon={<UserPlus size={16} className="mr-1" />}
+                  iconPosition="left"
+                  onClick={() => window.location.href = "/sign-up"}
+                >
+                  Sign Up
+                </AnimatedButton>
+                {/* For demo purposes, add a temporary button to toggle logged in state */}
+                <button 
+                  className="text-xs text-gray-500 underline"
+                  onClick={() => setIsLoggedIn(true)}
+                >
+                  Demo: Switch to logged in
+                </button>
+              </>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden rounded-full p-2 text-gray-600 hover:bg-gray-100"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            {isLoggedIn && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="outline-none">
+                  <Avatar className="h-8 w-8 border-2 border-white hover:border-health-muted transition-colors cursor-pointer">
+                    <AvatarImage src={images.avatar1} alt="User" />
+                    <AvatarFallback className="bg-health-primary text-white">JD</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => window.location.href = "/profile"}>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = "/dashboard"}>
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <button
+              className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
       
@@ -125,27 +197,78 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            
+            {isLoggedIn && (
+              <>
+                <Link
+                  to="/dashboard"
+                  className={`text-gray-800 hover:text-health-primary font-medium py-2 px-4 rounded-lg ${
+                    isActive("/dashboard") 
+                      ? "bg-health-muted text-health-primary" 
+                      : "hover:bg-gray-50"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/profile"
+                  className={`text-gray-800 hover:text-health-primary font-medium py-2 px-4 rounded-lg ${
+                    isActive("/profile") 
+                      ? "bg-health-muted text-health-primary" 
+                      : "hover:bg-gray-50"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+              </>
+            )}
           </div>
           
           {/* Mobile CTA Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-4">
-            <AnimatedButton
-              variant="outline"
-              className="w-full"
-              icon={<LogIn size={18} className="mr-2" />}
-              iconPosition="left"
-              onClick={() => window.location.href = "/sign-in"}
-            >
-              Sign In
-            </AnimatedButton>
-            <AnimatedButton
-              className="w-full"
-              icon={<UserPlus size={18} className="mr-2" />}
-              iconPosition="left"
-              onClick={() => window.location.href = "/sign-up"}
-            >
-              Sign Up
-            </AnimatedButton>
+          <div className="grid grid-cols-1 gap-3 pt-4">
+            {isLoggedIn ? (
+              <AnimatedButton
+                variant="outline"
+                className="w-full"
+                icon={<LogIn size={18} className="mr-2" />}
+                iconPosition="left"
+                onClick={() => {
+                  setIsLoggedIn(false);
+                  setMobileMenuOpen(false);
+                }}
+              >
+                Sign Out
+              </AnimatedButton>
+            ) : (
+              <>
+                <AnimatedButton
+                  variant="outline"
+                  className="w-full"
+                  icon={<LogIn size={18} className="mr-2" />}
+                  iconPosition="left"
+                  onClick={() => window.location.href = "/sign-in"}
+                >
+                  Sign In
+                </AnimatedButton>
+                <AnimatedButton
+                  className="w-full"
+                  icon={<UserPlus size={18} className="mr-2" />}
+                  iconPosition="left"
+                  onClick={() => window.location.href = "/sign-up"}
+                >
+                  Sign Up
+                </AnimatedButton>
+                {/* For demo purposes, add a temporary button to toggle logged in state */}
+                <button 
+                  className="text-xs text-gray-500 underline text-center mt-2"
+                  onClick={() => setIsLoggedIn(true)}
+                >
+                  Demo: Switch to logged in
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

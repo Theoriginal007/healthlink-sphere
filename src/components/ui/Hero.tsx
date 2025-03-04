@@ -3,6 +3,7 @@ import React from "react";
 import { images } from "@/assets/images";
 import AnimatedButton from "./AnimatedButton";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -39,20 +40,24 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center lg:justify-start animate-fade-in animate-delay-300">
-              <AnimatedButton 
-                size="lg" 
-                icon={<ArrowRight size={18} />}
-                iconPosition="right"
-              >
-                Get Started
-              </AnimatedButton>
+              <Link to="/get-started">
+                <AnimatedButton 
+                  size="lg" 
+                  icon={<ArrowRight size={18} />}
+                  iconPosition="right"
+                >
+                  Get Started
+                </AnimatedButton>
+              </Link>
               
-              <AnimatedButton 
-                variant="outline" 
-                size="lg"
-              >
-                Learn More
-              </AnimatedButton>
+              <Link to="/learn-more">
+                <AnimatedButton 
+                  variant="outline" 
+                  size="lg"
+                >
+                  Learn More
+                </AnimatedButton>
+              </Link>
             </div>
           </div>
           

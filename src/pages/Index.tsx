@@ -9,6 +9,7 @@ import EducationHub from "@/components/features/EducationHub";
 import { images } from "@/assets/images";
 import { Brain, Activity, BookOpen, Video, ArrowRight, Check, Shield, Globe } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -166,9 +167,11 @@ const Index = () => {
               </div>
               
               <div className="mt-8">
-                <AnimatedButton size="lg">
-                  Learn More About Our Services
-                </AnimatedButton>
+                <Link to="/services">
+                  <AnimatedButton size="lg">
+                    Learn More About Our Services
+                  </AnimatedButton>
+                </Link>
               </div>
             </div>
             
@@ -215,22 +218,26 @@ const Index = () => {
             tailored specifically for Kenya's healthcare landscape.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up animate-delay-200">
-            <AnimatedButton 
-              variant="outline" 
-              size="lg"
-              className="border-white text-white hover:bg-white/10"
-            >
-              Learn More
-            </AnimatedButton>
-            <AnimatedButton 
-              variant="ghost" 
-              size="lg"
-              className="bg-white text-health-primary hover:bg-white/90"
-              icon={<ArrowRight size={18} />}
-              iconPosition="right"
-            >
-              Get Started
-            </AnimatedButton>
+            <Link to="/learn-more">
+              <AnimatedButton 
+                variant="outline" 
+                size="lg"
+                className="border-white text-white hover:bg-white/10"
+              >
+                Learn More
+              </AnimatedButton>
+            </Link>
+            <Link to="/get-started">
+              <AnimatedButton 
+                variant="ghost" 
+                size="lg"
+                className="bg-white text-health-primary hover:bg-white/90"
+                icon={<ArrowRight size={18} />}
+                iconPosition="right"
+              >
+                Get Started
+              </AnimatedButton>
+            </Link>
           </div>
         </div>
       </section>

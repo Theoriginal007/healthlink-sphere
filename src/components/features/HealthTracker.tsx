@@ -1,7 +1,8 @@
 
 import React from "react";
 import { Heart, Activity, Moon, TrendingUp } from "lucide-react";
-import { images } from "@/assets/images";
+import { images, getImage } from "@/assets/images";
+import { placeholders } from "@/assets/placeholders";
 
 const HealthTracker = () => {
   // Mock health data
@@ -24,6 +25,16 @@ const HealthTracker = () => {
       goal: 8,
       quality: "good",
       unit: "hours"
+    }
+  };
+  
+  // Function to safely get an image or use placeholder as fallback
+  const safeGetImage = (key: keyof typeof images) => {
+    try {
+      return getImage(key);
+    } catch (e) {
+      console.error(`Failed to load image: ${key}`, e);
+      return placeholders.chart;
     }
   };
   
@@ -53,9 +64,12 @@ const HealthTracker = () => {
           
           <div className="mt-4 h-20 relative overflow-hidden rounded-lg">
             <img 
-              src={images.heartRate} 
+              src={safeGetImage('heartRate')} 
               alt="Heart rate chart" 
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                e.currentTarget.src = placeholders.chart;
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-red-500/20 to-transparent"></div>
           </div>
@@ -86,9 +100,12 @@ const HealthTracker = () => {
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
             <img 
-              src={images.activity} 
+              src={safeGetImage('activity')} 
               alt="Activity chart" 
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                e.currentTarget.src = placeholders.chart;
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-green-500/20 to-transparent"></div>
           </div>
@@ -119,9 +136,12 @@ const HealthTracker = () => {
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
             <img 
-              src={images.sleep} 
+              src={safeGetImage('sleep')} 
               alt="Sleep chart" 
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                e.currentTarget.src = placeholders.chart;
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/20 to-transparent"></div>
           </div>

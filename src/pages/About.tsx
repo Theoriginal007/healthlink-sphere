@@ -4,6 +4,7 @@ import Layout from "@/components/layout/Layout";
 import { Globe, Heart, Shield, Users, Award, ArrowRight } from "lucide-react";
 import { images } from "@/assets/images";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import SafeImage from "@/components/ui/SafeImage";
 
 const About = () => {
   // Team members
@@ -147,10 +148,11 @@ const About = () => {
               {team.map((member) => (
                 <div key={member.id} className="glass-card overflow-hidden group animate-fade-up" style={{ animationDelay: `${member.id * 100}ms` }}>
                   <div className="h-64 overflow-hidden">
-                    <img 
+                    <SafeImage 
                       src={member.image} 
                       alt={member.name} 
                       className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      placeholderType="avatar"
                     />
                   </div>
                   <div className="p-6">

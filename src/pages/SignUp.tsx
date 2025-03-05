@@ -1,7 +1,5 @@
-
 import React from "react";
 import Layout from "@/components/layout/Layout";
-import { useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,7 +16,6 @@ const SignUp = () => {
   });
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const { signUp, setActive } = useSignUp();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -38,45 +35,19 @@ const SignUp = () => {
       });
       return;
     }
-    
-    if (!signUp) {
-      toast({
-        title: "Error",
-        description: "Sign up is not available right now.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     try {
       setLoading(true);
       
-      // Split fullName into firstName and lastName
-      const nameParts = formData.fullName.split(" ");
-      const firstName = nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+      // Simulating a sign-up process
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const result = await signUp.create({
-        firstName,
-        lastName,
-        emailAddress: formData.email,
-        password: formData.password,
+      toast({
+        title: "Account created successfully!",
+        description: "Welcome to HealthSphere.",
       });
       
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        toast({
-          title: "Account created successfully!",
-          description: "Welcome to HealthSphere.",
-        });
-        navigate("/dashboard");
-      } else {
-        // Handle verification steps if needed
-        toast({
-          title: "Verification required",
-          description: "Please check your email to complete signup.",
-        });
-      }
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error signing up:", error);
       toast({

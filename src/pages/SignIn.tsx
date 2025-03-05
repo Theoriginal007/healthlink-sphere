@@ -1,7 +1,6 @@
 
 import React from "react";
 import Layout from "@/components/layout/Layout";
-import { useSignIn } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,44 +13,24 @@ const SignIn = () => {
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const { signIn, setActive } = useSignIn();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!signIn) {
-      toast({
-        title: "Error",
-        description: "Sign in is not available right now.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
       setLoading(true);
       
-      const result = await signIn.create({
-        identifier: email,
-        password,
+      // Simulating a sign-in process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Signed in successfully!",
+        description: "Welcome back to HealthSphere.",
       });
       
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        toast({
-          title: "Signed in successfully!",
-          description: "Welcome back to HealthSphere.",
-        });
-        navigate("/dashboard");
-      } else {
-        toast({
-          title: "Error signing in",
-          description: "Please check your credentials and try again.",
-          variant: "destructive",
-        });
-      }
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error signing in:", error);
       toast({

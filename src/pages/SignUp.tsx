@@ -1,22 +1,25 @@
 
-import React, { useState } from "react";
+import React from "react";
 import Layout from "@/components/layout/Layout";
+import { useSignUp } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
-import { images } from "@/assets/images";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const { signUp, setActive } = useSignUp();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +27,7 @@ const SignUp = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
@@ -36,17 +39,54 @@ const SignUp = () => {
       return;
     }
     
-    // Simulate API call
-    setLoading(true);
-    
-    setTimeout(() => {
-      setLoading(false);
+    if (!signUp) {
       toast({
-        title: "Account created successfully!",
-        description: "Welcome to HealthSphere. Please sign in to continue.",
+        title: "Error",
+        description: "Sign up is not available right now.",
+        variant: "destructive",
       });
-      // In a real app, redirect to sign in page after success
-    }, 1500);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      // Split fullName into firstName and lastName
+      const nameParts = formData.fullName.split(" ");
+      const firstName = nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+      
+      const result = await signUp.create({
+        firstName,
+        lastName,
+        emailAddress: formData.email,
+        password: formData.password,
+      });
+      
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        toast({
+          title: "Account created successfully!",
+          description: "Welcome to HealthSphere.",
+        });
+        navigate("/dashboard");
+      } else {
+        // Handle verification steps if needed
+        toast({
+          title: "Verification required",
+          description: "Please check your email to complete signup.",
+        });
+      }
+    } catch (error) {
+      console.error("Error signing up:", error);
+      toast({
+        title: "Error creating account",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

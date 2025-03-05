@@ -1,6 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import Layout from "@/components/layout/Layout";
+import { useSignIn } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -8,26 +10,58 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const { signIn, setActive } = useSignIn();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulate API call
-    setLoading(true);
-    
-    setTimeout(() => {
-      setLoading(false);
+    if (!signIn) {
       toast({
-        title: "Signed in successfully!",
-        description: "Welcome back to HealthSphere.",
+        title: "Error",
+        description: "Sign in is not available right now.",
+        variant: "destructive",
       });
-      // In a real app, redirect to dashboard after successful login
-    }, 1500);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      });
+      
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        toast({
+          title: "Signed in successfully!",
+          description: "Welcome back to HealthSphere.",
+        });
+        navigate("/dashboard");
+      } else {
+        toast({
+          title: "Error signing in",
+          description: "Please check your credentials and try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      toast({
+        title: "Error signing in",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

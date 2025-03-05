@@ -23,6 +23,7 @@ import LearnMore from "./pages/LearnMore";
 import CommonSymptoms from "./pages/CommonSymptoms";
 import HealthDevices from "./pages/HealthDevices";
 import BookConsultation from "./pages/BookConsultation";
+import PrivateRoute from "./components/auth/PrivateRoute";
 
 const queryClient = new QueryClient();
 
@@ -37,12 +38,28 @@ const App = () => (
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/symptom-analysis" element={<SymptomAnalysis />} />
-          <Route path="/health-tracking" element={<HealthTracking />} />
+          <Route path="/health-tracking" element={
+            <PrivateRoute>
+              <HealthTracking />
+            </PrivateRoute>
+          } />
           <Route path="/education" element={<Education />} />
           <Route path="/about" element={<About />} />
-          <Route path="/virtual-consultation" element={<VirtualConsultation />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/virtual-consultation" element={
+            <PrivateRoute>
+              <VirtualConsultation />
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <UserProfile />
+            </PrivateRoute>
+          } />
           <Route path="/articles" element={<Articles />} />
           <Route path="/services" element={<Services />} />
           <Route path="/doctors" element={<Doctors />} />
@@ -50,7 +67,11 @@ const App = () => (
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/common-symptoms" element={<CommonSymptoms />} />
           <Route path="/health-devices" element={<HealthDevices />} />
-          <Route path="/book-consultation" element={<BookConsultation />} />
+          <Route path="/book-consultation" element={
+            <PrivateRoute>
+              <BookConsultation />
+            </PrivateRoute>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

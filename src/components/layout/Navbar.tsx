@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { images } from "@/assets/images";
 import { Link, useLocation } from "react-router-dom";
@@ -9,19 +8,36 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // In a real app, this would come from auth state
   const location = useLocation();
   
-  // Update scroll state
+  // Update scroll state and visibility
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const currentScrollY = window.scrollY;
+      
+      // Determine if we should show or hide the navbar
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        // Scrolling down & past the navbar height
+        setIsVisible(false);
+      } else {
+        // Scrolling up or at the top
+        setIsVisible(true);
+      }
+      
+      // Update scroll state for styling
+      setIsScrolled(currentScrollY > 10);
+      
+      // Update last scroll position
+      setLastScrollY(currentScrollY);
     };
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
   
   // Navigation links
   const navLinks = [
@@ -39,9 +55,11 @@ const Navbar = () => {
   };
   
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? "py-3 bg-white/90 backdrop-blur-md shadow-sm" : "py-5 bg-transparent"
-    }`}>
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "py-3 bg-white/90 backdrop-blur-md shadow-sm" : "py-5 bg-transparent"
+      } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Logo */}

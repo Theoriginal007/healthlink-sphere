@@ -5,6 +5,7 @@ import EducationHub from "@/components/features/EducationHub";
 import { BookOpen, GraduationCap, Globe, Search, ChevronRight, Filter } from "lucide-react";
 import { images } from "@/assets/images";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { Link } from "react-router-dom";
 
 const Education = () => {
   // Sample categories
@@ -118,12 +119,14 @@ const Education = () => {
               </div>
               
               <div className="mt-8">
-                <AnimatedButton
-                  icon={<ChevronRight size={18} />}
-                  iconPosition="right"
-                >
-                  Learn More About Our Impact
-                </AnimatedButton>
+                <Link to="/about">
+                  <AnimatedButton
+                    icon={<ChevronRight size={18} />}
+                    iconPosition="right"
+                  >
+                    Learn More About Our Impact
+                  </AnimatedButton>
+                </Link>
               </div>
             </div>
             

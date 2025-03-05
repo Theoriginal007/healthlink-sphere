@@ -5,6 +5,7 @@ import HealthTracker from "@/components/features/HealthTracker";
 import { Activity, Heart, Moon, LineChart, ArrowRight } from "lucide-react";
 import { images } from "@/assets/images";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import { Link } from "react-router-dom";
 
 const HealthTracking = () => {
   // Sample metrics data
@@ -102,12 +103,14 @@ const HealthTracking = () => {
               </div>
               
               <div className="mt-8">
-                <AnimatedButton
-                  icon={<LineChart size={18} className="mr-2" />}
-                  iconPosition="left"
-                >
-                  View Detailed Analytics
-                </AnimatedButton>
+                <Link to="/detailed-analytics">
+                  <AnimatedButton
+                    icon={<LineChart size={18} className="mr-2" />}
+                    iconPosition="left"
+                  >
+                    View Detailed Analytics
+                  </AnimatedButton>
+                </Link>
               </div>
             </div>
           </div>
@@ -121,14 +124,16 @@ const HealthTracking = () => {
               </div>
               
               <div className="mt-8 text-center">
-                <AnimatedButton 
-                  variant="primary" 
-                  size="lg"
-                  icon={<ArrowRight size={18} />}
-                  iconPosition="right"
-                >
-                  Connect Your Devices
-                </AnimatedButton>
+                <Link to="/connect-devices">
+                  <AnimatedButton 
+                    variant="primary" 
+                    size="lg"
+                    icon={<ArrowRight size={18} />}
+                    iconPosition="right"
+                  >
+                    Connect Your Devices
+                  </AnimatedButton>
+                </Link>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Stethoscope, Brain, Activity, Heart, Shield, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link } from "react-router-dom";
 
 const Services = () => {
   const coreServices = [
@@ -18,7 +19,8 @@ const Services = () => {
         "Condition probability assessment",
         "Integration with medical database",
         "Follow-up recommendations"
-      ]
+      ],
+      path: "/symptom-analysis"
     },
     {
       title: "Health Tracking",
@@ -30,7 +32,8 @@ const Services = () => {
         "Exercise and activity logging",
         "Sleep quality analysis",
         "Nutrition and diet tracking"
-      ]
+      ],
+      path: "/health-tracking"
     },
     {
       title: "Virtual Consultations",
@@ -42,7 +45,8 @@ const Services = () => {
         "Digital prescription services",
         "Specialist referrals",
         "Follow-up appointment scheduling"
-      ]
+      ],
+      path: "/virtual-consultation"
     },
     {
       title: "Health Education",
@@ -54,7 +58,8 @@ const Services = () => {
         "Medical term definitions",
         "Treatment option explanations",
         "Wellness and lifestyle articles"
-      ]
+      ],
+      path: "/education"
     }
   ];
 
@@ -143,9 +148,11 @@ const Services = () => {
                       </ul>
                     </CardContent>
                     <CardFooter>
-                      <Button className="w-full" onClick={() => window.location.href = `/${service.title.toLowerCase().replace(/\s+/g, '-')}`}>
-                        Learn More <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      <Link to={service.path} className="w-full">
+                        <Button className="w-full">
+                          Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
                     </CardFooter>
                   </Card>
                 ))}
@@ -176,9 +183,11 @@ const Services = () => {
                       </ul>
                     </CardContent>
                     <CardFooter>
-                      <Button variant="outline" className="w-full" onClick={() => window.location.href = "/premium-services"}>
-                        Get Premium <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      <Link to="/premium-services" className="w-full">
+                        <Button variant="outline" className="w-full">
+                          Get Premium <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
                     </CardFooter>
                   </Card>
                 ))}
@@ -190,12 +199,16 @@ const Services = () => {
                   Unlock all premium features and get personalized healthcare support with a HealthSphere Premium subscription.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button variant="outline" className="text-white border-white hover:bg-white/20">
-                    View Pricing Plans
-                  </Button>
-                  <Button className="bg-white text-health-primary hover:bg-white/90">
-                    Start Free Trial
-                  </Button>
+                  <Link to="/premium-services">
+                    <Button variant="outline" className="text-white border-white hover:bg-white/20">
+                      View Pricing Plans
+                    </Button>
+                  </Link>
+                  <Link to="/premium-services">
+                    <Button className="bg-white text-health-primary hover:bg-white/90">
+                      Start Free Trial
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </TabsContent>

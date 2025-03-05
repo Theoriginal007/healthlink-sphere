@@ -23,6 +23,7 @@ import LearnMore from "./pages/LearnMore";
 import CommonSymptoms from "./pages/CommonSymptoms";
 import HealthDevices from "./pages/HealthDevices";
 import BookConsultation from "./pages/BookConsultation";
+import ComingSoon from "./pages/ComingSoon";
 import PrivateRoute from "./components/auth/PrivateRoute";
 
 const queryClient = new QueryClient();
@@ -72,6 +73,11 @@ const App = () => (
               <BookConsultation />
             </PrivateRoute>
           } />
+          <Route path="/premium-services" element={<ComingSoon />} />
+          <Route path="/detailed-analytics" element={<ComingSoon />} />
+          <Route path="/connect-devices" element={<ComingSoon />} />
+          <Route path="/symptom-checker" element={<ComingSoon />} />
+          <Route path="/health-education" element={<ComingSoon />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

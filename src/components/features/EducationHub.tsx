@@ -2,6 +2,8 @@
 import React from "react";
 import { Book, ChevronRight, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
+import SafeImage from "@/components/ui/SafeImage";
+import { images } from "@/assets/images";
 
 const EducationHub = () => {
   // Mock education data
@@ -44,10 +46,11 @@ const EducationHub = () => {
           <div key={article.id} className="glass-card p-0 overflow-hidden group">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 h-48 md:h-auto relative">
-                <img 
+                <SafeImage 
                   src={article.image} 
                   alt={article.title} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  placeholderType="article"
                 />
                 <div className="absolute top-3 left-3">
                   <div className="flex items-center px-2 py-1 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium text-health-primary">

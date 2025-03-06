@@ -4,6 +4,7 @@ import Layout from "@/components/layout/Layout";
 import { Video, Phone, Calendar, Clock, User, MessageSquare, ArrowRight } from "lucide-react";
 import { images } from "@/assets/images";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import SafeImage from "@/components/ui/SafeImage";
 
 const VirtualConsultation = () => {
   const [consultationType, setConsultationType] = useState("video");
@@ -61,10 +62,12 @@ const VirtualConsultation = () => {
           {/* Hero Image */}
           <div className="mb-20 animate-fade-up animate-delay-100">
             <div className="relative rounded-3xl overflow-hidden shadow-feature">
-              <img 
+              <SafeImage 
                 src={images.virtualConsultation} 
                 alt="Virtual doctor consultation" 
                 className="w-full h-auto object-cover"
+                placeholderType="consultation"
+                fallback="https://images.unsplash.com/photo-1609904603780-26239ef9e128?auto=format&fit=crop&w=800&q=80"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               

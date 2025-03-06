@@ -6,6 +6,7 @@ import { Activity, Heart, Moon, LineChart, ArrowRight } from "lucide-react";
 import { images } from "@/assets/images";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { Link } from "react-router-dom";
+import SafeImage from "@/components/ui/SafeImage";
 
 const HealthTracking = () => {
   // Sample metrics data
@@ -61,10 +62,12 @@ const HealthTracking = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
             <div className="animate-fade-up">
               <div className="relative rounded-3xl overflow-hidden shadow-feature animate-float h-[500px]">
-                <img 
+                <SafeImage 
                   src={images.healthTracking} 
                   alt="Health tracking dashboard" 
                   className="w-full h-full object-cover"
+                  placeholderType="feature"
+                  fallback="https://images.unsplash.com/photo-1559447066-49724f6ffb5c?auto=format&fit=crop&w=800&q=80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 
@@ -83,7 +86,12 @@ const HealthTracking = () => {
                   <div key={metric.id} className="glass-card p-4 flex items-center group hover:border-health-primary hover:shadow-md transition-all">
                     <div className="h-16 w-16 rounded-xl bg-gray-100 flex items-center justify-center mr-4 overflow-hidden">
                       {metric.image ? (
-                        <img src={metric.image} alt={metric.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                        <SafeImage 
+                          src={metric.image} 
+                          alt={metric.title} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                          placeholderType="chart"
+                        />
                       ) : (
                         <div className="text-2xl">{metric.icon}</div>
                       )}

@@ -29,16 +29,6 @@ const HealthTracker = () => {
     }
   };
   
-  // Function to safely get an image or use placeholder as fallback
-  const safeGetImage = (key: string) => {
-    try {
-      return getImage(key as keyof typeof images);
-    } catch (e) {
-      console.error(`Failed to load image: ${key}`, e);
-      return placeholders.chart;
-    }
-  };
-  
   return (
     <div className="glass-card h-full p-6 flex flex-col">
       <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -65,7 +55,7 @@ const HealthTracker = () => {
           
           <div className="mt-4 h-20 relative overflow-hidden rounded-lg">
             <SafeImage 
-              src={safeGetImage('heartRate')} 
+              src={images.heartRate} 
               alt="Heart rate chart" 
               className="w-full h-full object-cover object-center"
               placeholderType="chart"
@@ -99,7 +89,7 @@ const HealthTracker = () => {
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
             <SafeImage 
-              src={safeGetImage('activity')} 
+              src={images.activity} 
               alt="Activity chart" 
               className="w-full h-full object-cover object-center"
               placeholderType="chart"
@@ -133,7 +123,7 @@ const HealthTracker = () => {
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
             <SafeImage 
-              src={safeGetImage('sleep')} 
+              src={images.sleep} 
               alt="Sleep chart" 
               className="w-full h-full object-cover object-center"
               placeholderType="chart"

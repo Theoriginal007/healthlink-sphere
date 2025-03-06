@@ -29,9 +29,9 @@ const HealthTracker = () => {
   };
   
   // Function to safely get an image or use placeholder as fallback
-  const safeGetImage = (key: keyof typeof images) => {
+  const safeGetImage = (key: string) => {
     try {
-      return getImage(key);
+      return getImage(key as keyof typeof images);
     } catch (e) {
       console.error(`Failed to load image: ${key}`, e);
       return placeholders.chart;

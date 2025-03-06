@@ -7,31 +7,6 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 import SafeImage from "@/components/ui/SafeImage";
 
 const About = () => {
-  // Team members
-  const team = [
-    {
-      id: 1,
-      name: "Dr. Sarah Njeri",
-      role: "Medical Director",
-      image: images.avatar1,
-      bio: "With over 15 years of experience in healthcare, Dr. Njeri leads our medical team, ensuring all content and features are medically accurate."
-    },
-    {
-      id: 2,
-      name: "James Omondi",
-      role: "Chief Technology Officer",
-      image: images.avatar2,
-      bio: "James brings expertise in AI and ML technologies, driving the technical innovation behind HealthSphere's advanced features."
-    },
-    {
-      id: 3,
-      name: "Grace Wanjiku",
-      role: "Community Health Specialist",
-      image: images.avatar3,
-      bio: "Grace works directly with Kenyan communities to understand their unique healthcare needs and challenges."
-    }
-  ];
-
   return (
     <Layout>
       <div className="relative w-full overflow-hidden">
@@ -131,37 +106,6 @@ const About = () => {
               >
                 Learn More About Our Impact
               </AnimatedButton>
-            </div>
-          </div>
-          
-          {/* Our Team */}
-          <div className="mb-20">
-            <div className="text-center max-w-3xl mx-auto mb-12 animate-fade-up">
-              <h2 className="text-3xl font-bold mb-4">Meet Our Team</h2>
-              <p className="text-gray-600">
-                Our diverse team of healthcare professionals, technologists, and community specialists
-                work together to make HealthSphere a reality.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {team.map((member) => (
-                <div key={member.id} className="glass-card overflow-hidden group animate-fade-up" style={{ animationDelay: `${member.id * 100}ms` }}>
-                  <div className="h-64 overflow-hidden">
-                    <SafeImage 
-                      src={member.image} 
-                      alt={member.name} 
-                      className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                      placeholderType="avatar"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                    <p className="text-health-primary font-medium mb-3">{member.role}</p>
-                    <p className="text-gray-600">{member.bio}</p>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
           

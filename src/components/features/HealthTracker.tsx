@@ -3,6 +3,7 @@ import React from "react";
 import { Heart, Activity, Moon, TrendingUp } from "lucide-react";
 import { images, getImage } from "@/assets/images";
 import { placeholders } from "@/assets/placeholders";
+import SafeImage from "@/components/ui/SafeImage";
 
 const HealthTracker = () => {
   // Mock health data
@@ -63,13 +64,11 @@ const HealthTracker = () => {
           </div>
           
           <div className="mt-4 h-20 relative overflow-hidden rounded-lg">
-            <img 
+            <SafeImage 
               src={safeGetImage('heartRate')} 
               alt="Heart rate chart" 
               className="w-full h-full object-cover object-center"
-              onError={(e) => {
-                e.currentTarget.src = placeholders.chart;
-              }}
+              placeholderType="chart"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-red-500/20 to-transparent"></div>
           </div>
@@ -99,13 +98,11 @@ const HealthTracker = () => {
           </div>
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
-            <img 
+            <SafeImage 
               src={safeGetImage('activity')} 
               alt="Activity chart" 
               className="w-full h-full object-cover object-center"
-              onError={(e) => {
-                e.currentTarget.src = placeholders.chart;
-              }}
+              placeholderType="chart"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-green-500/20 to-transparent"></div>
           </div>
@@ -135,13 +132,11 @@ const HealthTracker = () => {
           </div>
           
           <div className="mt-2 h-20 relative overflow-hidden rounded-lg">
-            <img 
+            <SafeImage 
               src={safeGetImage('sleep')} 
               alt="Sleep chart" 
               className="w-full h-full object-cover object-center"
-              onError={(e) => {
-                e.currentTarget.src = placeholders.chart;
-              }}
+              placeholderType="chart"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/20 to-transparent"></div>
           </div>

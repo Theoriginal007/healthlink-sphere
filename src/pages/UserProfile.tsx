@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,22 +11,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, User, Shield, Settings, Key, Clock, ExternalLink, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { images } from "@/assets/images";
+import { userService } from "@/services/mongodb/mongoService";
 
 const UserProfile = () => {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+254 712 345 678",
-    birthDate: "1985-07-15",
-    gender: "Male",
-    bloodType: "O+",
-    height: "175",
-    weight: "70",
-    allergies: "None",
-    medications: "None",
-    conditions: "None",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    birthDate: "",
+    gender: "",
+    bloodType: "",
+    height: "",
+    weight: "",
+    allergies: "",
+    medications: "",
+    conditions: "",
+    _id: ""
   });
 
   const [notificationSettings, setNotificationSettings] = useState({
@@ -38,6 +40,85 @@ const UserProfile = () => {
     healthTips: true,
     newsletterUpdates: false,
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const users = await userService.query({ email: "john.doe@example.com" });
+        
+        if (users && users.length > 0) {
+          const userData = users[0];
+          
+          setFormData({
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "",
+            email: userData.email || "",
+            phone: userData.phone || "",
+            birthDate: userData.birthDate || "",
+            gender: userData.gender || "",
+            bloodType: userData.bloodType || "",
+            height: userData.height || "",
+            weight: userData.weight || "",
+            allergies: userData.allergies || "",
+            medications: userData.medications || "",
+            conditions: userData.conditions || "",
+            _id: userData._id || ""
+          });
+          
+          if (userData.notificationSettings) {
+            setNotificationSettings(userData.notificationSettings);
+          }
+        } else {
+          createDefaultUser();
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        createDefaultUser();
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchUserData();
+  }, []);
+  
+  const createDefaultUser = async () => {
+    try {
+      const defaultUser = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+        phone: "+254 712 345 678",
+        birthDate: "1985-07-15",
+        gender: "Male",
+        bloodType: "O+",
+        height: "175",
+        weight: "70",
+        allergies: "None",
+        medications: "None",
+        conditions: "None",
+        notificationSettings: {
+          emailNotifications: true,
+          smsNotifications: false,
+          appointmentReminders: true,
+          medicationReminders: true,
+          healthTips: true,
+          newsletterUpdates: false,
+        }
+      };
+      
+      const newUser = await userService.create(defaultUser);
+      
+      if (newUser && newUser._id) {
+        setFormData({
+          ...defaultUser,
+          _id: newUser._id
+        });
+      }
+    } catch (error) {
+      console.error("Error creating default user:", error);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,21 +135,73 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Profile Updated",
-      description: "Your profile information has been successfully updated.",
-    });
+    
+    try {
+      if (formData._id) {
+        await userService.update(formData._id, formData);
+      } else {
+        const newUser = await userService.create(formData);
+        if (newUser && newUser._id) {
+          setFormData(prev => ({
+            ...prev,
+            _id: newUser._id
+          }));
+        }
+      }
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile information has been successfully updated.",
+      });
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      toast({
+        title: "Update Failed",
+        description: "There was an error updating your profile.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleSaveNotifications = (e: React.FormEvent) => {
+  const handleSaveNotifications = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Notification Settings Updated",
-      description: "Your notification preferences have been saved.",
-    });
+    
+    try {
+      if (formData._id) {
+        await userService.update(formData._id, {
+          notificationSettings: notificationSettings
+        });
+        
+        toast({
+          title: "Notification Settings Updated",
+          description: "Your notification preferences have been saved.",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving notification settings:", error);
+      toast({
+        title: "Update Failed",
+        description: "There was an error updating your notification settings.",
+        variant: "destructive"
+      });
+    }
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center">
+              <p>Loading profile...</p>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -78,10 +211,10 @@ const UserProfile = () => {
             <div className="flex items-center">
               <Avatar className="h-16 w-16 border-2 border-white shadow-sm">
                 <AvatarImage src={images.avatar1} alt="User profile" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>{`${formData.firstName.charAt(0)}${formData.lastName.charAt(0)}`}</AvatarFallback>
               </Avatar>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold">John Doe</h1>
+                <h1 className="text-2xl font-bold">{`${formData.firstName} ${formData.lastName}`}</h1>
                 <p className="text-gray-600">Manage your account settings and preferences</p>
               </div>
             </div>

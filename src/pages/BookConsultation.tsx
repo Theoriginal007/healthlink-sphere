@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +11,7 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarIcon, Clock, ChevronRight, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
+import { appointmentService } from "@/services/mongodb/mongoService";
 
 const BookConsultation = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -29,7 +29,6 @@ const BookConsultation = () => {
   const [bookingComplete, setBookingComplete] = useState(false);
   const { toast } = useToast();
 
-  // Mock data for doctors
   const doctors = [
     {
       id: 1,
@@ -81,7 +80,6 @@ const BookConsultation = () => {
     }
   ];
 
-  // Mock data for specialities
   const specialties = [
     "All Specialties",
     "General Practitioner",
@@ -95,7 +93,6 @@ const BookConsultation = () => {
     "Ophthalmologist"
   ];
 
-  // Mock data for available time slots
   const timeSlots = [
     "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", 
     "11:00 AM", "11:30 AM", "12:00 PM", "02:00 PM", 
@@ -124,19 +121,54 @@ const BookConsultation = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleBookAppointment = (e: React.FormEvent) => {
+  const handleBookAppointment = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulate API call to book appointment
-    setTimeout(() => {
+    if (!selectedDoctor || !date || !selectedTime) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a doctor, date, and time for your appointment.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const appointmentData = {
+        doctorId: selectedDoctor.id,
+        doctorName: selectedDoctor.name,
+        doctorSpecialty: selectedDoctor.specialty,
+        patientName: formData.name,
+        patientEmail: formData.email,
+        patientPhone: formData.phone,
+        date: date.toISOString(),
+        time: selectedTime,
+        reason: formData.reason,
+        notes: formData.notes,
+        status: "scheduled",
+        createdAt: new Date().toISOString()
+      };
+
+      const result = await appointmentService.create(appointmentData);
+      
+      console.log("Appointment saved:", result);
+      
       setBookingComplete(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
       toast({
         title: "Appointment Booked!",
-        description: `Your appointment with ${selectedDoctor.name} on ${date ? format(date, 'PPP') : 'the selected date'} at ${selectedTime} has been confirmed.`,
+        description: `Your appointment with ${selectedDoctor.name} on ${format(date, 'PPP')} at ${selectedTime} has been confirmed.`,
       });
-    }, 1500);
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+      
+      toast({
+        title: "Booking Failed",
+        description: "There was an error booking your appointment. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleStartOver = () => {

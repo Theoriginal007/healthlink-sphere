@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -44,11 +45,13 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const users = await userService.query({ email: "john.doe@example.com" });
+        // Since we don't have a query method, we'll get all users and filter in JS
+        const users = await userService.getAll();
         
-        if (users && users.length > 0) {
-          const userData = users[0];
-          
+        // Find the user with the email "john.doe@example.com"
+        const userData = users.find(user => user.email === "john.doe@example.com");
+        
+        if (userData) {
           setFormData({
             firstName: userData.firstName || "",
             lastName: userData.lastName || "",

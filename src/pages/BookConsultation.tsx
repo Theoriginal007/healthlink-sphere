@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarIcon, Clock, ChevronRight, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
-import { appointmentService } from "@/services/mongodb/mongoService";
+import { appointmentService, mongoService } from "@/services/mongodb/mongoService";
+import { COLLECTIONS } from "@/services/mongodb/config";
 
 const BookConsultation = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -27,58 +28,9 @@ const BookConsultation = () => {
     notes: ""
   });
   const [bookingComplete, setBookingComplete] = useState(false);
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-
-  const doctors = [
-    {
-      id: 1,
-      name: "Dr. Sarah Ngugi",
-      specialty: "General Practitioner",
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80",
-      rating: 4.9,
-      experience: "10 years",
-      education: "University of Nairobi Medical School",
-      languages: ["English", "Swahili"],
-      availability: true,
-      nextAvailable: "Today"
-    },
-    {
-      id: 2,
-      name: "Dr. David Ochieng",
-      specialty: "Pediatrician",
-      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80",
-      rating: 4.8,
-      experience: "15 years",
-      education: "Kenyatta University School of Medicine",
-      languages: ["English", "Swahili", "Luo"],
-      availability: true,
-      nextAvailable: "Tomorrow"
-    },
-    {
-      id: 3,
-      name: "Dr. Jane Kamau",
-      specialty: "Dermatologist",
-      image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=300&q=80",
-      rating: 4.7,
-      experience: "8 years",
-      education: "Moi University School of Medicine",
-      languages: ["English", "Swahili"],
-      availability: true,
-      nextAvailable: "In 2 days"
-    },
-    {
-      id: 4,
-      name: "Dr. Michael Kariuki",
-      specialty: "Cardiologist",
-      image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80",
-      rating: 4.9,
-      experience: "20 years",
-      education: "University of Nairobi Medical School",
-      languages: ["English", "Swahili", "Kikuyu"],
-      availability: true,
-      nextAvailable: "Today"
-    }
-  ];
 
   const specialties = [
     "All Specialties",
@@ -99,6 +51,105 @@ const BookConsultation = () => {
     "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", 
     "04:30 PM", "05:00 PM"
   ];
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const doctorsData = await mongoService.getAll(COLLECTIONS.USERS);
+        let filteredDoctors = doctorsData.filter(user => user.role === 'doctor');
+        
+        if (filteredDoctors.length === 0) {
+          await createDefaultDoctors();
+          filteredDoctors = await mongoService.query(COLLECTIONS.USERS, { role: 'doctor' });
+        }
+        
+        setDoctors(filteredDoctors);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        await createDefaultDoctors();
+        const doctorsData = await mongoService.query(COLLECTIONS.USERS, { role: 'doctor' });
+        setDoctors(doctorsData);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDoctors();
+  }, []);
+
+  const createDefaultDoctors = async () => {
+    const defaultDoctors = [
+      {
+        name: "Dr. Sarah Ngugi",
+        firstName: "Sarah",
+        lastName: "Ngugi",
+        role: "doctor",
+        specialty: "General Practitioner",
+        email: "sarah.ngugi@example.com",
+        image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80",
+        rating: 4.9,
+        experience: "10 years",
+        education: "University of Nairobi Medical School",
+        languages: ["English", "Swahili"],
+        availability: true,
+        nextAvailable: "Today"
+      },
+      {
+        name: "Dr. David Ochieng",
+        firstName: "David",
+        lastName: "Ochieng",
+        role: "doctor",
+        specialty: "Pediatrician",
+        email: "david.ochieng@example.com",
+        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80",
+        rating: 4.8,
+        experience: "15 years",
+        education: "Kenyatta University School of Medicine",
+        languages: ["English", "Swahili", "Luo"],
+        availability: true,
+        nextAvailable: "Tomorrow"
+      },
+      {
+        name: "Dr. Jane Kamau",
+        firstName: "Jane",
+        lastName: "Kamau",
+        role: "doctor",
+        specialty: "Dermatologist",
+        email: "jane.kamau@example.com",
+        image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=300&q=80",
+        rating: 4.7,
+        experience: "8 years",
+        education: "Moi University School of Medicine",
+        languages: ["English", "Swahili"],
+        availability: true,
+        nextAvailable: "In 2 days"
+      },
+      {
+        name: "Dr. Michael Kariuki",
+        firstName: "Michael",
+        lastName: "Kariuki",
+        role: "doctor",
+        specialty: "Cardiologist",
+        email: "michael.kariuki@example.com",
+        image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80",
+        rating: 4.9,
+        experience: "20 years",
+        education: "University of Nairobi Medical School",
+        languages: ["English", "Swahili", "Kikuyu"],
+        availability: true,
+        nextAvailable: "Today"
+      }
+    ];
+    
+    try {
+      for (const doctor of defaultDoctors) {
+        await mongoService.create(COLLECTIONS.USERS, doctor);
+      }
+      console.log("Default doctors created successfully");
+    } catch (error) {
+      console.error("Error creating default doctors:", error);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -186,6 +237,18 @@ const BookConsultation = () => {
     setBookingComplete(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-5xl mx-auto text-center">
+            <p>Loading doctors...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

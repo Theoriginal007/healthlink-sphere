@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { MongoClient, ObjectId } from 'mongodb';
 import { MONGODB_URI, COLLECTIONS } from './config';
@@ -162,6 +161,7 @@ export const userService = {
   create: (data: any) => mongoService.create(COLLECTIONS.USERS, data),
   update: (id: string, data: any) => mongoService.update(COLLECTIONS.USERS, id, data),
   delete: (id: string) => mongoService.delete(COLLECTIONS.USERS, id),
+  getByEmail: (email: string) => mongoService.query(COLLECTIONS.USERS, { email }),
 };
 
 export const healthRecordService = {

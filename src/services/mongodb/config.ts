@@ -1,9 +1,9 @@
 
 // MongoDB configuration
 
-// Using MongoDB Atlas connection string
-// Replace with your actual MongoDB Atlas connection string when deploying
-export const MONGODB_URI = "mongodb+srv://<username>:<password>@cluster0.mongodb.net/healthsphere?retryWrites=true&w=majority";
+// Local MongoDB connection string for development with MongoDB Compass
+// This connects to your local MongoDB instance
+export const MONGODB_URI = "mongodb://localhost:27017/healthsphere";
 
 // Collection names
 export const COLLECTIONS = {
@@ -13,5 +13,6 @@ export const COLLECTIONS = {
   ARTICLES: 'articles',
 };
 
-// This is a frontend application, so we'll use this URI in a separate backend service
-// or serverless functions. For now, this serves as configuration documentation.
+// Note: For a production environment, you would use:
+// - MongoDB Atlas (cloud) connection string OR
+// - Environment variables to store connection information
